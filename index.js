@@ -1,12 +1,12 @@
-// 1. Importamos Express
 const express = require('express');
+const cors = require('cors');
 
-// 2. Creamos una instancia de Express
 const app = express();
 
-// 3. Definimos el puerto donde correrá el servidor
+app.use(cors());
+
 const PORT = process.env.PORT || 3000;
-// 4. Creamos nuestra "base de datos" (un simple array de objetos)
+
 const dinosaurios = [
     {
         nombre: 'Tiranosaurio Rex',
@@ -40,33 +40,21 @@ const dinosaurios = [
     }
 ];
 
-// 5. Definimos el endpoint (ruta) para obtener todos los dinosaurios
-// GET /api/dinosaurios
 app.get('/api/dinosaurios', (req, res) => {
     res.json(dinosaurios);
 });
 
-// 6. Definimos el endpoint para obtener UN dinosaurio por su nombre
-// GET /api/dinosaurios/Tiranosaurio
 app.get('/api/dinosaurios/:nombre', (req, res) => {
-    // Obtenemos el nombre de los parámetros de la URL
     const nombreDino = req.params.nombre;
-
-    // Buscamos el dinosaurio en nuestro array
-    // Usamos toLowerCase() para que la búsqueda no distinga mayúsculas/minúsculas
     const dino = dinosaurios.find(d => d.nombre.toLowerCase() === nombreDino.toLowerCase());
 
-    // Si no encontramos el dinosaurio, enviamos un error 404
     if (!dino) {
         return res.status(404).json({ mensaje: 'Dinosaurio no encontrado' });
     }
 
-    // Si lo encontramos, lo enviamos como respuesta
     res.json(dino);
 });
 
-
-// 7. Ponemos el servidor a escuchar en el puerto que definimos
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
